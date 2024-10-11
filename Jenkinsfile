@@ -3,7 +3,8 @@ pipeline {
     environment {
         // Create a sanitized Docker tag by replacing slashes with underscores
         DOCKER_TAG = "${GIT_BRANCH.replaceAll('/', '_')}"
-        CHECKOUT_BRANCH = "${GIT_BRANCH}"
+        // Use the branch name for checkout, adding 'origin/' prefix
+        CHECKOUT_BRANCH = "origin/${GIT_BRANCH}"
     }
     stages {
         stage('Set Build Display Name') {
