@@ -10,7 +10,7 @@ pipeline {
         stage('Set Build Display Name') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} - ${SANITIZED_BRANCH}"
                 }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                    branches: [[name: "${GIT_BRANCH}"]],
+                    branches: [[name: "${SANITIZED_BRANCH}"]],
                     userRemoteConfigs: [[url: 'https://github.com/danielchou777/jenkins-tutorial.git']]
                 ])
             }
