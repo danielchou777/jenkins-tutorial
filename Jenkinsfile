@@ -7,6 +7,7 @@ pipeline {
     stages {
         stage('install') {
             steps {
+                sh 'npm config set cache $(pwd)/.npm-cache --global'
                 sh 'npm install'
             }
         }
