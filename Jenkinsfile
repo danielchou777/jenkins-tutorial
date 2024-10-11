@@ -18,7 +18,7 @@ pipeline {
         stage('build') {
             steps {
                 // Remove 'sudo' and run your build command
-                sh 'npm run start'
+                sh 'npm ci'
             }
         }
     }
