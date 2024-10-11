@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Create a sanitized Docker tag by replacing slashes with underscores
         DOCKER_TAG = "${GIT_BRANCH.replaceAll('/', '_')}"
-        CHECKOUT_BRANCH = "${GIT_BRANCH}"
+        CHECKOUT_REF = "${GIT_BRANCH}"
     }
     stages {
         stage('Set Build Display Name') {
@@ -22,8 +22,9 @@ pipeline {
             steps {
                 // Use the CHECKOUT_BRANCH variable for checkout
                 checkout([$class: 'GitSCM',
-                    branches: [[name: "${CHECKOUT_BRANCH}"]],
-                    userRemoteConfigs: [[url: 'https://github.com/danielchou777/jenkins-tutorial.git']]
+                    branches: [[name: "${CHECKOUT_REF}"]],
+                    userRemoteConfigs: [[url: 'https://github.com/danielchou777/jenkins-tutorial.git']],
+                    extensions: [],
                 ])
             }
         }
