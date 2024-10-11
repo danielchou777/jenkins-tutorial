@@ -36,7 +36,7 @@ pipeline {
                     if (isTag) {
                         sh "git checkout tags/${GIT_BRANCH}"
                     } else {
-                        sh "git checkout origin/${GIT_BRANCH}"
+                        sh "git checkout ${GIT_BRANCH}"
                     }
                 }
             }
