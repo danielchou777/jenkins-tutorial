@@ -4,18 +4,21 @@ pipeline {
             image 'node:20-alpine' 
         } 
     }
+    environment {
+        // Set the NPM cache directory using an environment variable
+        NPM_CONFIG_CACHE = "${pwd()}/.npm-cache"
+    }
     stages {
         stage('install') {
             steps {
-                // Run npm install with sudo if needed
-                sh 'sudo npm config set cache $(pwd)/.npm-cache --global || npm config set cache $(pwd)/.npm-cache --global'
-                sh 'sudo npm install || npm install'
+                // Remove 'sudo' and avoid global configurations
+                sh 'npm install'
             }
         }
         stage('build') {
             steps {
-                // Run the build command
-                sh 'sudo npm run start || npm run start'
+                // Remove 'sudo' and run your build command
+                sh 'npm run start'
             }
         }
     }
