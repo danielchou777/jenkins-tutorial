@@ -1,24 +1,19 @@
 pipeline {
-    agent { 
-        docker { 
-            image 'node:20-alpine' 
-        } 
-    }
-    environment {
-        // Set the NPM cache directory using an environment variable
-        NPM_CONFIG_CACHE = "${pwd()}/.npm-cache"
-    }
+    agent any
     stages {
-        stage('install') {
+        stage('Cleanup') {
             steps {
-                // Remove 'sudo' and avoid global configurations
-                sh 'npm install'
+                sh 'docker rm -f jenkins-tutorial || true'
             }
         }
-        stage('build') {
+        stage('Build') {
             steps {
-                // Remove 'sudo' and run your build command
-                sh 'npm ci'
+                sh 'docker build -t my-app .'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker run -d -p 3000:3000 --name jenkins-tutorial my-app'
             }
         }
     }
