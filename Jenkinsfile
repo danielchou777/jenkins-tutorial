@@ -7,13 +7,15 @@ pipeline {
     stages {
         stage('install') {
             steps {
-                sh 'npm config set cache $(pwd)/.npm-cache --global'
-                sh 'npm install'
+                // Run npm install with sudo if needed
+                sh 'sudo npm config set cache $(pwd)/.npm-cache --global || npm config set cache $(pwd)/.npm-cache --global'
+                sh 'sudo npm install || npm install'
             }
         }
         stage('build') {
             steps {
-                sh 'npm run start'
+                // Run the build command
+                sh 'sudo npm run start || npm run start'
             }
         }
     }
