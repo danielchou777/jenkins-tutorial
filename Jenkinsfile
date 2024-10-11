@@ -1,16 +1,16 @@
 pipeline {
     agent any
     environment {
-        // Remove 'origin/' prefix from GIT_BRANCH if present
-        SANITIZED_BRANCH = "${GIT_BRANCH.startsWith('origin/') ? GIT_BRANCH.replaceFirst('origin/', '') : GIT_BRANCH}"
         // Create a sanitized Docker tag by replacing slashes with underscores
-        DOCKER_TAG = "${SANITIZED_BRANCH.replaceAll('/', '_')}"
+        DOCKER_TAG = "${GIT_BRANCH.replaceAll('/', '_')}"
+        // Use the branch name for checkout, adding 'origin/' prefix
+        CHECKOUT_BRANCH = "origin/${GIT_BRANCH}"
     }
     stages {
         stage('Set Build Display Name') {
             steps {
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} - ${SANITIZED_BRANCH}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
                 }
             }
         }
@@ -21,8 +21,9 @@ pipeline {
         }
         stage('Checkout') {
             steps {
+                // Use the CHECKOUT_BRANCH variable for checkout
                 checkout([$class: 'GitSCM',
-                    branches: [[name: "${SANITIZED_BRANCH}"]],
+                    branches: [[name: "${CHECKOUT_BRANCH}"]],
                     userRemoteConfigs: [[url: 'https://github.com/danielchou777/jenkins-tutorial.git']]
                 ])
             }
