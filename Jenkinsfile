@@ -20,12 +20,25 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                // Use the CHECKOUT_BRANCH variable for checkout
-                checkout([$class: 'GitSCM',
-                    branches: [[name: "${CHECKOUT_REF}"]],
-                    userRemoteConfigs: [[url: 'https://github.com/danielchou777/jenkins-tutorial.git']],
-                    extensions: [],
-                ])
+                script {
+                    // Initialize Git repository
+                    sh 'git init'
+
+                    // Add remote
+                    sh 'git remote add origin https://github.com/danielchou777/jenkins-tutorial.git'
+
+                    // Fetch all branches and tags
+                    sh 'git fetch --all'
+
+                    // Determine if GIT_BRANCH is a tag or branch
+                    def isTag = sh(script: "git rev-parse --verify refs/tags/${GIT_BRANCH}", returnStatus: true) == 0
+
+                    if (isTag) {
+                        sh "git checkout tags/${GIT_BRANCH}"
+                    } else {
+                        sh "git checkout origin/${GIT_BRANCH}"
+                    }
+                }
             }
         }
         stage('Cleanup') {
