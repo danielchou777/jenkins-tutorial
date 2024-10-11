@@ -3,6 +3,10 @@ pipeline {
     parameters {
         string(name: 'GIT_BRANCH', defaultValue: 'main', description: 'Git branch or tag to build')
     }
+    environment {
+        // Create a sanitized Docker tag by replacing slashes with underscores
+        DOCKER_TAG = "${GIT_BRANCH.replaceAll('/', '_')}"
+    }
     stages {
         stage('Clean Workspace') {
             steps {
@@ -27,14 +31,14 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Build the Docker image with a tag based on the GIT_BRANCH
-                sh "docker build -t my-app:${GIT_BRANCH} ."
+                // Build the Docker image with the sanitized tag
+                sh "docker build -t my-app:${DOCKER_TAG} ."
             }
         }
         stage('Deploy') {
             steps {
                 // Run the Docker container from the image, mapping port 3000
-                sh "docker run -d -p 3000:3000 --name jenkins-tutorial my-app:${GIT_BRANCH}"
+                sh "docker run -d -p 3000:3000 --name jenkins-tutorial my-app:${DOCKER_TAG}"
             }
         }
     }
