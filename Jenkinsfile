@@ -1,8 +1,10 @@
 pipeline {
     agent any
     environment {
+        // Remove 'origin/' prefix from GIT_BRANCH if present
+        SANITIZED_BRANCH = "${GIT_BRANCH.startsWith('origin/') ? GIT_BRANCH.replaceFirst('origin/', '') : GIT_BRANCH}"
         // Create a sanitized Docker tag by replacing slashes with underscores
-        DOCKER_TAG = "${GIT_BRANCH.replaceAll('/', '_')}"
+        DOCKER_TAG = "${SANITIZED_BRANCH.replaceAll('/', '_')}"
     }
     stages {
         stage('Set Build Display Name') {
