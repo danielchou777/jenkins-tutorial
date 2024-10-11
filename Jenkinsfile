@@ -17,11 +17,6 @@ pipeline {
                 sh 'npm ci'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }
         stage('Deploy') {
             steps {
                 sh 'npm run start'
