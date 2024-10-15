@@ -41,6 +41,19 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Execute SonarQube scanner
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'sonar-scanner \
+                            -Dsonar.projectKey=jenkins-tutorial \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://localhost:9000'
+                    }
+                }
+            }
+        }
         stage('Cleanup') {
             steps {
                 // Stop and remove any existing Docker container with the same name
